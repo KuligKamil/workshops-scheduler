@@ -1,0 +1,37 @@
+- presenter: Z
+  categories:
+  - name: DS
+    presentations:
+      - Science
+      - Data
+      - Magic
+      - Presentation
+- presenter: Kamil
+  categories:
+  - name: Frontend
+    presentations:
+      - Who is the GOAT
+  - name: Python
+    presentations:
+      - basic
+      - backend
+- presenter: Mike
+  categories:
+    - name: DS
+      presentations:
+        - ML
+    - name: Python
+      presentations:
+        - Decorator
+        - OOP
+- presenter: L
+  categories:
+    - name: Python
+      presentations:
+        - API Backend
+- presenter: M
+  categories:
+    - name: Frontend
+      presentations:
+        - API Frontend
+        - Typescript
