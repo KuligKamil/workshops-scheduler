@@ -1,36 +1,71 @@
 <script setup lang="ts">
 import jsonData from '../example.json'
 
-const list: Array<number> = [1, 2, 3]
 const data = jsonData.data
 const presentations = []
 
 class Presentation {
+  date: string
   presenter: string
   category: string
   subject: string
 
-  constructor(presenter: string, category: string, subject: string) {
+  constructor(date: string, presenter: string, category: string, subject: string) {
+    this.date = date
     this.category = category
     this.presenter = presenter
     this.subject = subject
   }
 }
 
+const getDateInFormat = (q: Date) => {
+  const ymd = q.toISOString().split('T')[0].split('-')
+  return `${ymd[0]}-${ymd[1]}-${ymd[2]}`
+}
+
+const disablesDates: Array<string> = []
+let basicDate = '2022-09-14'
 for (const presenter of data) {
   // console.log(data)
   // console.log(presenter.presenter)
+
   for (const categories of presenter.categories) {
     for (const presentation of categories.presentations) {
+
+      const d = new Date(basicDate)
+      const date = d.toISOString().split('T')[0]
+      // this.date = `${d.getMonth()}-${d.getDate()}`
+      d.setDate(d.getDate() + 7)
+      basicDate = d.toISOString().split('T')[0]
       presentations.push(new Presentation(
+        date,
         presenter.presenter,
         categories.name,
         presentation,
       ))
+      // disablesDates.push(new Date(`2022-${presentation.date}`))
+      disablesDates.push(getDateInFormat(d))
+      // disablesDates.push(`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`)
     }
   }
 }
-
+console.log(disablesDates)
+const isTaken = ({dayjs}) => {
+  console.log(dayjs.format('YYYY-MM-DD'))
+  console.log(typeof dayjs.format('YYYY-MM-DD'))
+  console.log(disablesDates)
+  console.log(disablesDates.includes(dayjs.format('YYYY-MM-DD')))
+  return disablesDates.includes(dayjs.format('YYYY-MM-DD'))
+}
+const date = ref('')
+const disabledDate = (time: Date) => {
+  // console.log(time)
+  console.log(getDateInFormat(time))
+  console.log(disablesDates.includes(getDateInFormat(time)))
+  console.log(disablesDates)
+  return disablesDates.includes(getDateInFormat(time))
+  // return time.getTime() > Date.now()
+}
 // let categories = new Set<string>()
 // for (const i of presentations) categories.add(i.category)
 // // const groupByCategory: Array<any> = []
@@ -113,10 +148,44 @@ for (const presenter of data) {
 // }
 // for (const i of presentations)
 //   results.push(i)
+
 </script>
 
 <template>
   <main class="px-4 py-10 text-center text-gray-700 dark:text-gray-200">
+    <h1>Back to school</h1>
+    <div class="block">
+      <span class="demonstration">Picker with quick options</span>
+      <el-date-picker
+        v-model="date"
+        type="date"
+        placeholder="Pick a day"
+        :disabled-date="disabledDate"
+      >
+        <!--      />-->
+        <!--        :shortcuts="shortcuts"-->
+        <!--        :size="size"-->
+        <!--      >-->
+
+<!--        <template #default="cell">-->
+<!--          <div v-if="isTaken(cell)" class="normal disabled">-->
+<!--            <span class="text">{{ cell.text }} S</span>-->
+<!--          </div>-->
+<!--          <div v-else class="cell" :class="{ current: cell.isCurrent }">-->
+<!--            <span class="text">{{ cell.text }}</span>-->
+<!--            &lt;!&ndash;            <span v-if="isTaken(cell)" class="holiday"/>&ndash;&gt;-->
+<!--            &lt;!&ndash;            <span v-if="disabledDate(cell)" class="holiday"/>&ndash;&gt;-->
+<!--          </div>-->
+<!--        </template>-->
+      </el-date-picker>
+    </div>
+    <el-table :data="presentations">
+      <!--      <el-table-column prop="date" label="Date" width="180"/>-->
+      <el-table-column prop="date" label="Date" width="180"/>
+      <el-table-column prop="presenter" label="Name" width="180"/>
+      <el-table-column prop="subject" label="Subject" width="180"/>
+      <el-table-column prop="category" label="Category"/>
+    </el-table>
     <RouterView/>
     <!--    <div class="btn">aaaa</div>-->
     <ul>
@@ -131,3 +200,38 @@ for (const presenter of data) {
     </div>
   </main>
 </template>
+<style scoped>
+.cell {
+  height: 30px;
+  padding: 3px 0;
+  box-sizing: border-box;
+}
+
+.cell .text {
+  width: 24px;
+  height: 24px;
+  display: block;
+  margin: 0 auto;
+  line-height: 24px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+}
+
+.cell.current .text {
+  background: #626aef;
+  color: #fff;
+}
+
+.cell .holiday {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--el-color-danger);
+  border-radius: 50%;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+</style>
