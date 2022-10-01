@@ -31,7 +31,6 @@ for (const presenter of data) {
 
   for (const categories of presenter.categories) {
     for (const presentation of categories.presentations) {
-
       const d = new Date(basicDate)
       const date = d.toISOString().split('T')[0]
       // this.date = `${d.getMonth()}-${d.getDate()}`
@@ -60,10 +59,15 @@ const isTaken = ({dayjs}) => {
 const date = ref('')
 const disabledDate = (time: Date) => {
   // console.log(time)
+  console.log()
+  console.log(time)
+  // time = time.toISOString()
   console.log(getDateInFormat(time))
   console.log(disablesDates.includes(getDateInFormat(time)))
   console.log(disablesDates)
+  console.log()
   return disablesDates.includes(getDateInFormat(time))
+
   // return time.getTime() > Date.now()
 }
 // let categories = new Set<string>()
@@ -150,55 +154,28 @@ const disabledDate = (time: Date) => {
 //   results.push(i)
 
 </script>
-
-<template>
-  <main class="px-4 py-10 text-center text-gray-700 dark:text-gray-200">
-    <h1>Back to school</h1>
-    <div class="block">
-      <span class="demonstration">Picker with quick options</span>
-      <el-date-picker
-        v-model="date"
-        type="date"
-        placeholder="Pick a day"
-        :disabled-date="disabledDate"
-      >
-        <!--      />-->
-        <!--        :shortcuts="shortcuts"-->
-        <!--        :size="size"-->
-        <!--      >-->
-
-<!--        <template #default="cell">-->
-<!--          <div v-if="isTaken(cell)" class="normal disabled">-->
-<!--            <span class="text">{{ cell.text }} S</span>-->
-<!--          </div>-->
-<!--          <div v-else class="cell" :class="{ current: cell.isCurrent }">-->
-<!--            <span class="text">{{ cell.text }}</span>-->
-<!--            &lt;!&ndash;            <span v-if="isTaken(cell)" class="holiday"/>&ndash;&gt;-->
-<!--            &lt;!&ndash;            <span v-if="disabledDate(cell)" class="holiday"/>&ndash;&gt;-->
-<!--          </div>-->
-<!--        </template>-->
-      </el-date-picker>
-    </div>
-    <el-table :data="presentations">
-      <!--      <el-table-column prop="date" label="Date" width="180"/>-->
-      <el-table-column prop="date" label="Date" width="180"/>
-      <el-table-column prop="presenter" label="Name" width="180"/>
-      <el-table-column prop="subject" label="Subject" width="180"/>
-      <el-table-column prop="category" label="Category"/>
-    </el-table>
-    <RouterView/>
-    <!--    <div class="btn">aaaa</div>-->
-    <ul>
-      <li v-for="presentation of presentations" :key="presentation.subject" class="b-1 b-rd py-4 w-xs">
-        {{ presentation.presenter }} -{{ presentation.subject }} [ {{ presentation.category }} ]
-        <div class="btn"></div>
-      </li>
-    </ul>
-    <Footer/>
-    <div class="mt-5 mx-auto text-center opacity-75 dark:opacity-50 text-sm">
-      [Home Layout]
-    </div>
-  </main>
+<template lang="pug">
+main.px-4.py-10.text-center.text-gray-700(class='dark:text-gray-200')
+  h1 Back to school
+  .block
+    span.demonstration Picker with quick options
+    el-date-picker(v-model='date' type='date' placeholder='Pick a day' :disabled-date='disabledDate')
+  el-table(:data='presentations')
+    // <el-table-column prop="date" label="Date" width="180"/>
+    el-table-column(prop='date' label='Date' width='180')
+    el-table-column(prop='presenter' label='Name' width='180')
+    el-table-column(prop='subject' label='Subject' width='180')
+    el-table-column(prop='category' label='Category')
+  RouterView
+  Footer
+      // <div class="btn">aaaa</div>
+  ul
+    li.b-1.b-rd.py-4.w-xs(v-for='presentation of presentations' :key='presentation.subject')
+      | {{ presentation.presenter }} - {{ presentation.subject }} [ {{ presentation.category }} ]
+      .btn
+  footer
+  .mt-5.mx-auto.text-center.opacity-75.text-sm(class='dark:opacity-50')
+    | [Home Layout]
 </template>
 <style scoped>
 .cell {
