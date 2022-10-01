@@ -70,6 +70,14 @@ const disabledDate = (time: Date) => {
 
   // return time.getTime() > Date.now()
 }
+
+const handleEdit = (index: number, row: Presentation) => {
+  console.log(index, row)
+}
+const handleDelete = (index: number, row: Presentation) => {
+  console.log(index, row)
+}
+
 // let categories = new Set<string>()
 // for (const i of presentations) categories.add(i.category)
 // // const groupByCategory: Array<any> = []
@@ -154,20 +162,29 @@ const disabledDate = (time: Date) => {
 //   results.push(i)
 
 </script>
+
 <template lang="pug">
-main.px-4.py-10.text-center.text-gray-700(class='dark:text-gray-200')
+main.dark.px-4.py-10.text-center.text-gray-700(class='dark:text-gray-200')
   h1 Back to school
-  .block
-    span.demonstration Picker with quick options
-    el-date-picker(v-model='date' type='date' placeholder='Pick a day' :disabled-date='disabledDate')
   el-table(:data='presentations')
     // <el-table-column prop="date" label="Date" width="180"/>
+    el-table-column(type='index')
     el-table-column(prop='date' label='Date' width='180')
     el-table-column(prop='presenter' label='Name' width='180')
     el-table-column(prop='subject' label='Subject' width='180')
     el-table-column(prop='category' label='Category')
+    el-table-column(align='right')
+      template(#header='')
+        el-input(v-model='search' size='small' placeholder='Type to search')
+      template(#default='scope')
+        el-button(size='small' @click='handleEdit(scope.$index, scope.row)') Edit
+        el-button(size='small' type='danger' @click='handleDelete(scope.$index, scope.row)') Delete
+
   RouterView
   Footer
+  .block
+    span.demonstration Picker with quick options
+    el-date-picker(v-model='date' type='date' placeholder='Pick a day' :disabled-date='disabledDate')
       // <div class="btn">aaaa</div>
   ul
     li.b-1.b-rd.py-4.w-xs(v-for='presentation of presentations' :key='presentation.subject')
